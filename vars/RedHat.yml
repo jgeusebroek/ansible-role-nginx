@@ -1,0 +1,7 @@
+---
+nginx_pkg:
+  - nginx
+
+yum_epel_repo: epel
+yum_base_repo: base
+yum_updates_repo: updates

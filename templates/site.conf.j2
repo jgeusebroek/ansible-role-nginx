@@ -1,0 +1,116 @@
+#{{ ansible_managed }}
+
+{% for site in nginx_sites[item] %}
+{% if site.ssl is defined and site.ssl.force_ssl is defined %}
+server {
+    server_name {{ site.server_name }} {% if site.aliases is defined %}{% for site in site.aliases %}{{ site }}{% if not loop.last %} {% endif %}{% endfor %}{% endif %};
+{% for port in site.ssl.force_ssl.listen_ports %}
+    listen {{ port }};
+{% endfor %}
+    return {{ site.ssl.force_ssl.status | default('301') }} https://{{ site.ssl.force_ssl.redirect_hostname | default('$server_name') }}$request_uri;
+
+{% if site.nologs is defined %}
+    access_log off;
+    error_log off;
+{% else %}
+{% if site.logs is defined %}
+{% for log in site.logs %}
+    {{ log }};
+{% endfor %}
+{% else %}
+    access_log {{ nginx_log_dir }}/{{ site.server_name }}_access.log combined;
+    error_log {{ nginx_log_dir }}/{{ site.server_name }}_access.log warn;
+{% endif %}
+{% endif %}
+}
+{% endif %}
+
+server {
+    server_name {{ site.server_name }} {% if site.aliases is defined %}{% for site in site.aliases %}{{ site }}{% if not loop.last %} {% endif %}{% endfor %}{% endif %};
+
+    root {{ site.root | default(nginx_default_root)}};
+    index {{ site.index | default(nginx_default_index) }};
+
+{% for port in site.ports %}
+    listen {{ port }};
+{% endfor %}
+
+{% if site.nologs is defined %}
+    access_log off;
+    error_log off;
+{% else %}
+{% if site.logs is defined %}
+{% for log in site.logs %}
+    {{ log }};
+{% endfor %}
+{% else %}
+    access_log {{ nginx_log_dir }}/{{ site.server_name }}_access.log combined;
+    error_log {{ nginx_log_dir }}/{{ site.server_name }}_access.log warn;
+{% endif %}
+{% endif %}
+
+{% if site.ssl is defined and site.ssl.key is defined and site.ssl.crt is defined %}
+    ssl_certificate_key {{ site.ssl.key }};
+    ssl_certificate {{ site.ssl.crt }};
+{% if nginx_ssl_hsts and (site.ssl.hsts is undefined or site.ssl.hsts == True) %}
+    add_header Strict-Transport-Security "max-age={{ nginx_ssl_hsts_age }}; includeSubdomains;";
+{% endif %}
+{% endif %}
+
+{% if (site.favicon is defined and site.favicon) or site.favicon is undefined %}
+    location = /favicon.ico {
+      try_files /favicon.ico =204;
+      access_log off;
+      log_not_found off;
+    }
+{% endif %}
+
+{% if (site.robots is defined and site.robots) or site.robots is undefined %}
+    location = /robots.txt {
+      try_files /robots.txt =204;
+      access_log off;
+      log_not_found off;
+    }
+{% endif %}
+
+{% if (site.deny_hidden is undefined or site.deny_hidden|d()) %}
+    # Disallow access to hidden files and directories
+    location ~ /\. {
+      return 404;
+    }
+{% endif %}
+
+{% if site.includes is defined and site.includes is iterable %}
+{% for include in site.includes %}
+    include {{ include }};
+{% endfor %}
+{% endif %}
+
+{% if site.status is defined and site.status or nginx_status or nginx_status_localhost %}
+    location = {{ site.status_name | default(nginx_status_name) }} {
+      stub_status on;
+      access_log off;
+{% if nginx_status_localhost %}
+{% for address in nginx_status_localhost | unique %}
+      allow {{ address }};
+{% endfor %}
+{% endif %}
+{% if nginx_status %}
+{% for address in nginx_status | unique %}
+      allow {{ address }};
+{% endfor %}
+{% endif %}
+{% if site.status is defined and site.status %}
+{% for address in site.status | unique %}
+      allow {{ address }};
+{% endfor %}
+{% endif %}
+      deny all;
+    }
+{% endif %}
+
+{% if site.custom is defined and site.custom %}
+      {{ site.custom | indent(4) }}
+{% endif %}
+}
+{% endfor %}

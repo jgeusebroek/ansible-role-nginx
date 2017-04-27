@@ -1,0 +1,36 @@
+---
+- name: Create the directories for site specific configurations
+  file:
+    path: '{{ item.path }}'
+    owner: '{{ nginx_config_user }}'
+    group: '{{ nginx_config_group }}'
+    mode: '{{ item.mode }}'
+    state: '{{ item.state }}'
+    recurse: "{{ 'yes' if item.recurse is defined else 'no' }}"
+  with_items:
+    - path: '{{ nginx_conf_dir }}'
+      state: 'directory'
+      mode: '0755'
+    - path: '{{ nginx_conf_dir }}/sites-enabled'
+      state: 'directory'
+      mode: '{{ nginx_config_dir_mode }}'
+    - path: '{{ nginx_conf_dir }}/sites-available'
+      state: 'directory'
+      mode: '{{ nginx_config_dir_mode }}'
+    - path: '{{ nginx_conf_dir }}/conf.d'
+      state: 'directory'
+      mode: '{{ nginx_config_dir_mode }}'
+    - path: '{{ nginx_conf_dir }}/auth_basic'
+      state: 'directory'
+      mode: '{{ nginx_auth_dir_mode }}'
+    - path: '{{ nginx_conf_dir }}/snippets'
+      state: 'directory'
+      mode: '{{ nginx_config_dir_mode }}'
+
+- name: Ensure log directory exist
+  file:
+    path: '{{ nginx_log_dir }}'
+    state: 'directory'
+    owner: '{{ nginx_user }}'
+    group: '{{ nginx_group }}'
+    mode: '0755'

@@ -1,0 +1,58 @@
+---
+- name: Copy the nginx configuration file
+  template:
+    src: nginx.conf.j2
+    dest: '{{nginx_conf_dir}}/nginx.conf'
+    owner: '{{ nginx_config_user }}'
+    group: '{{ nginx_config_group }}'
+  notify:
+   - Restart nginx
+
+- name: Create auth_basic files
+  template:
+    src: 'auth_basic.j2'
+    dest: '{{nginx_conf_dir}}/auth_basic/{{ item }}'
+    owner: '{{ nginx_config_user }}'
+    group: '{{ nginx_config_group }}'
+    mode: '{{ nginx_auth_file_mode }}'
+  with_items: '{{ nginx_auth_basic_files.keys() }}'
+
+- name: Create snippets
+  template:
+    src: 'snippets.conf.j2'
+    dest: '{{nginx_conf_dir}}/snippets/{{ item }}.conf'
+    owner: '{{ nginx_config_user }}'
+    group: '{{ nginx_config_group }}'
+    mode: '{{ nginx_config_file_mode }}'
+  with_items: '{{ nginx_snippets.keys() }}'
+  notify:
+   - Reload nginx
+
+- name: Create config.d files
+  template:
+    src: 'config.conf.j2'
+    dest: '{{ nginx_conf_dir }}/conf.d/{{ item }}.conf'
+    owner: '{{ nginx_config_user }}'
+    group: '{{ nginx_config_group }}'
+  with_items: '{{ nginx_configs.keys() }}'
+  notify:
+   - Reload nginx
+
+- name: Create site configurations
+  template:
+    src: 'site.conf.j2'
+    dest: '{{ nginx_conf_dir }}/sites-available/{{ item }}.conf'
+    owner: '{{ nginx_config_user }}'
+    group: '{{ nginx_config_group }}'
+  with_items: '{{ nginx_sites.keys() | difference(nginx_remove_sites) }}'
+  notify:
+   - Reload nginx
+
+- name: Symlink available-sites to enabled-sites
+  file:
+    state: link
+    src: '{{ nginx_conf_dir }}/sites-available/{{ item }}.conf'
+    dest: '{{ nginx_conf_dir }}/sites-enabled/{{ item }}.conf'
+  with_items: '{{ nginx_sites.keys() | difference(nginx_remove_sites) }}'
+  notify:
+   - Reload nginx

@@ -1,0 +1,20 @@
+---
+- name: Install RPM official nginx key | RedHat
+  rpm_key:
+    key: 'http://nginx.org/keys/nginx_signing.key'
+  when: ansible_os_family == 'RedHat' and nginx_use_official_repo == true
+
+- name: Add YUM official nginx repository | RedHat
+  template:
+    src: '{{ ansible_os_family }}/nginx.repo.j2'
+    dest: '/etc/yum.repos.d/nginx.repo'
+  when: ansible_os_family == 'RedHat' and nginx_use_official_repo == true
+
+- name: Install the nginx packages | RedHat
+  yum:
+    name: '{{ item }}'
+    state: installed
+    update_cache: true
+    disablerepo: '*'
+    enablerepo: '{{ "nginx," if nginx_use_official_repo else "" }}{{ yum_epel_repo }},{{ yum_base_repo }},{{ yum_updates_repo }}'
+  with_items: '{{ nginx_pkg }}'

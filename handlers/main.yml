@@ -1,0 +1,31 @@
+---
+- name: Restart nginx
+  debug: msg="checking config first"
+  changed_when: True
+  notify:
+    - Check nginx configuration
+    - Restart nginx - after config check
+
+- name: Reload nginx
+  debug: msg="checking config first"
+  changed_when: True
+  notify:
+    - Check nginx configuration
+    - Reload nginx - after config check
+
+- name: Check nginx configuration
+  shell: "{{ nginx_binary_name }} -t"
+  register: result
+  changed_when: "result.rc != 0"
+  always_run: yes
+  tags: skip_ansible_lint
+
+- name: Restart nginx - after config check
+  service:
+    name: '{{ nginx_service_name }}'
+    state: restarted
+
+- name: Reload nginx - after config check
+  service:
+    name: '{{ nginx_service_name }}'
+    state: reloaded

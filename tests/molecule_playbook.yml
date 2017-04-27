@@ -1,0 +1,13 @@
+---
+- hosts: redhat
+  roles:
+    - { role: jgeusebroek.epel, when: ansible_os_family == 'RedHat' }
+
+- hosts: all
+
+  vars:
+      nginx_use_official_repo: True
+      nginx_status_localhost: [ '127.0.0.1' ]
+
+  roles:
+    - role: jgeusebroek.nginx
