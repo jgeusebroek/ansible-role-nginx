@@ -98,7 +98,7 @@ nginx_sites:
   000-default:
     - server_name: '_'
       ports: [ "80 default" ]
-      root: "/usr/share/nginx/html"
+      root: '{{ nginx_default_root }}'
       includes:
         - snippets/gzip_default.conf
 
