@@ -29,7 +29,9 @@ server {
 server {
     server_name {{ site.server_name }} {% if site.aliases is defined %}{% for site in site.aliases %}{{ site }}{% if not loop.last %} {% endif %}{% endfor %}{% endif %};
 
-    root {{ site.root | default(nginx_default_root)}};
+{% if site.root is defined %}
+    root {{ site.root }};
+{% endif %}
     index {{ site.index | default(nginx_default_index) }};
 
 {% for port in site.ports %}
