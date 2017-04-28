@@ -19,10 +19,11 @@ server {
 {% endfor %}
 {% else %}
     access_log {{ nginx_log_dir }}/{{ site.server_name }}_access.log combined;
-    error_log {{ nginx_log_dir }}/{{ site.server_name }}_access.log warn;
+    error_log {{ nginx_log_dir }}/{{ site.server_name }}_error.log warn;
 {% endif %}
 {% endif %}
 }
+
 {% endif %}
 
 server {
@@ -45,7 +46,7 @@ server {
 {% endfor %}
 {% else %}
     access_log {{ nginx_log_dir }}/{{ site.server_name }}_access.log combined;
-    error_log {{ nginx_log_dir }}/{{ site.server_name }}_access.log warn;
+    error_log {{ nginx_log_dir }}/{{ site.server_name }}_error.log warn;
 {% endif %}
 {% endif %}
 
