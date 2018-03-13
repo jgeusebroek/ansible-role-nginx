@@ -15,26 +15,26 @@
     owner: '{{ nginx_config_user }}'
     group: '{{ nginx_config_group }}'
     mode: '{{ nginx_auth_file_mode }}'
-  with_items: '{{ nginx_auth_basic_files.keys() }}'
+  with_dict: '{{ nginx_auth_basic_files }}'
 
 - name: Create snippets
   template:
     src: 'snippets.conf.j2'
-    dest: '{{nginx_conf_dir}}/snippets/{{ item }}.conf'
+    dest: '{{nginx_conf_dir}}/snippets/{{ item.key }}.conf'
     owner: '{{ nginx_config_user }}'
     group: '{{ nginx_config_group }}'
     mode: '{{ nginx_config_file_mode }}'
-  with_items: '{{ nginx_snippets.keys() }}'
+  with_dict: '{{ nginx_snippets }}'
   notify:
    - Reload nginx
 
 - name: Create config.d files
   template:
     src: 'config.conf.j2'
-    dest: '{{ nginx_conf_dir }}/conf.d/{{ item }}.conf'
+    dest: '{{ nginx_conf_dir }}/conf.d/{{ item.key }}.conf'
     owner: '{{ nginx_config_user }}'
     group: '{{ nginx_config_group }}'
-  with_items: '{{ nginx_configs.keys() }}'
+  with_dict: '{{ nginx_configs }}'
   notify:
    - Reload nginx
 

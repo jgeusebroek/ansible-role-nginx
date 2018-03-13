@@ -1,6 +1,6 @@
 #{{ ansible_managed }}
 
-{% for v in nginx_snippets[item] %}
+{% for v in nginx_snippets[item.key] %}
 {% if v.find('\n') != -1 %}
 {{v}}
 {% else %}
