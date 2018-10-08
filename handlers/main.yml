@@ -17,7 +17,7 @@
   shell: "{{ nginx_binary_name }} -t"
   register: result
   changed_when: "result.rc != 0"
-  always_run: yes
+  check_mode: yes
   tags: skip_ansible_lint
 
 - name: Restart nginx - after config check
