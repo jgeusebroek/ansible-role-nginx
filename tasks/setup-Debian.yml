@@ -12,8 +12,7 @@
   when: ansible_os_family == 'Debian' and nginx_use_official_repo == true
 
 - name: Install the nginx packages | Debian
-  apt:
-    name: '{{ item }}'
+  package:
+    name: '{{ nginx_pkg }}'
     state: present
-  with_items: '{{ nginx_pkg }}'
   when: ansible_os_family == "Debian"
