@@ -1,45 +1,45 @@
 ---
 - name: Find current enabled sites
-  shell: ls -1 {{nginx_conf_dir}}/sites-enabled
+  shell: ls -1 {{ nginx_conf_dir }}/sites-enabled
   register: enabled_sites
   changed_when: False
   tags: skip_ansible_lint
 
 - name: Remove unmanaged enabled sites
   file:
-    path: '{{nginx_conf_dir}}/sites-enabled/{{ item }}'
+    path: '{{ nginx_conf_dir }}/sites-enabled/{{ item }}'
     state: absent
-  with_items: '{{enabled_sites.stdout_lines}}'
+  with_items: '{{ enabled_sites.stdout_lines }}'
   when: item[:-5] not in nginx_sites.keys()
   notify:
    - Reload nginx
 
 - name: Find config.d files
-  shell: ls -1 {{nginx_conf_dir}}/conf.d
+  shell: ls -1 {{ nginx_conf_dir }}/conf.d
   register: config_files
   changed_when: False
   tags: skip_ansible_lint
 
 - name: Remove unmanaged config.d files
   file:
-    name: '{{nginx_conf_dir}}/conf.d/{{ item }}'
+    name: '{{ nginx_conf_dir }}/conf.d/{{ item }}'
     state: absent
-  with_items: '{{config_files.stdout_lines}}'
+  with_items: '{{ config_files.stdout_lines }}'
   when: item[:-5] not in nginx_configs.keys()
   notify:
    - Reload nginx
 
 - name: Find snippets
-  shell: ls -1 {{nginx_conf_dir}}/snippets
+  shell: ls -1 {{ nginx_conf_dir }}/snippets
   register: snippets
   changed_when: False
   tags: skip_ansible_lint
 
 - name: Remove unmanaged snippets
   file:
-    name: '{{nginx_conf_dir}}/snippets/{{ item }}'
+    name: '{{ nginx_conf_dir }}/snippets/{{ item }}'
     state: absent
-  with_items: '{{snippets.stdout_lines}}'
+  with_items: '{{ snippets.stdout_lines }}'
   when: item[:-5] not in nginx_snippets.keys()
   notify:
    - Reload nginx

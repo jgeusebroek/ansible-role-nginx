@@ -2,7 +2,7 @@
 - name: Copy the nginx configuration file
   template:
     src: nginx.conf.j2
-    dest: '{{nginx_conf_dir}}/nginx.conf'
+    dest: '{{ nginx_conf_dir }}/nginx.conf'
     owner: '{{ nginx_config_user }}'
     group: '{{ nginx_config_group }}'
   notify:
@@ -11,7 +11,7 @@
 - name: Create auth_basic files
   template:
     src: 'auth_basic.j2'
-    dest: '{{nginx_conf_dir}}/auth_basic/{{ item }}'
+    dest: '{{ nginx_conf_dir }}/auth_basic/{{ item }}'
     owner: '{{ nginx_config_user }}'
     group: '{{ nginx_config_group }}'
     mode: '{{ nginx_auth_file_mode }}'
@@ -20,7 +20,7 @@
 - name: Create snippets
   template:
     src: 'snippets.conf.j2'
-    dest: '{{nginx_conf_dir}}/snippets/{{ item.key }}.conf'
+    dest: '{{ nginx_conf_dir }}/snippets/{{ item.key }}.conf'
     owner: '{{ nginx_config_user }}'
     group: '{{ nginx_config_group }}'
     mode: '{{ nginx_config_file_mode }}'

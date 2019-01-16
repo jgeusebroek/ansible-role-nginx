@@ -8,7 +8,7 @@
 
 - name: Search for default configuration files that can be removed
   shell: >
-    find {{nginx_conf_dir}} -maxdepth 1
+    find {{ nginx_conf_dir }} -maxdepth 1
     -name '*.default' -o
     -name 'fastcgi.conf' -o
     -name 'default.d' -o

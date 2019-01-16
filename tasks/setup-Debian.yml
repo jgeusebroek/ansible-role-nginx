@@ -2,14 +2,14 @@
 - name: Install APT official nginx repo key | Debian
   apt_key:
     url: 'http://nginx.org/keys/nginx_signing.key'
-  when: ansible_os_family == 'Debian' and nginx_use_official_repo == true
+  when: ansible_os_family == 'Debian' and nginx_use_official_repo
 
 - name: Add official nginx repository | Debian
   apt_repository:
     repo: 'deb http://nginx.org/packages/{{ ansible_distribution|lower }}/ {{ ansible_distribution_release }} nginx'
     state: present
     update_cache: yes
-  when: ansible_os_family == 'Debian' and nginx_use_official_repo == true
+  when: ansible_os_family == 'Debian' and nginx_use_official_repo
 
 - name: Install the nginx packages | Debian
   package:
