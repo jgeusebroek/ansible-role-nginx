@@ -1,17 +1,5 @@
 ---
-- hosts: redhat
-  roles:
-    - { role: jgeusebroek.epel, when: ansible_os_family == 'RedHat' }
-
 - hosts: all
-
-  pre_tasks:
-    - name: Ensure gnupg is installed on Debian 9 (Stretch)
-      package:
-        name: gnupg
-        state: installed
-      changed_when: False
-      when: ansible_distribution_release == 'stretch'
 
   vars:
       nginx_use_official_repo: True

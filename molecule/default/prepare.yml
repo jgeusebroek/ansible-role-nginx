@@ -1,5 +1,13 @@
 ---
-- name: Prepare
-  hosts: all
-  gather_facts: false
-  tasks: []
+- hosts: all
+
+  roles:
+    - { role: jgeusebroek.epel, when: ansible_os_family == 'RedHat' }
+
+  tasks:
+    - name: Ensure GnuPG is installed (Debian)
+      package:
+        name: gnupg
+        state: present
+      changed_when: False
+      when: ansible_os_family == 'Debian'
