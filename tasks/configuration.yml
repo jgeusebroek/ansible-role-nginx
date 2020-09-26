@@ -6,7 +6,7 @@
     owner: '{{ nginx_config_user }}'
     group: '{{ nginx_config_group }}'
   notify:
-   - Restart nginx
+    - Restart nginx
 
 - name: Create auth_basic files
   template:
@@ -26,7 +26,7 @@
     mode: '{{ nginx_config_file_mode }}'
   with_dict: '{{ nginx_snippets }}'
   notify:
-   - Reload nginx
+    - Reload nginx
 
 - name: Create config.d files
   template:
@@ -36,7 +36,7 @@
     group: '{{ nginx_config_group }}'
   with_dict: '{{ nginx_configs }}'
   notify:
-   - Reload nginx
+    - Reload nginx
 
 - name: Create site configurations
   template:
@@ -46,7 +46,7 @@
     group: '{{ nginx_config_group }}'
   with_items: '{{ nginx_sites.keys() | difference(nginx_remove_sites) }}'
   notify:
-   - Reload nginx
+    - Reload nginx
 
 - name: Symlink available-sites to enabled-sites
   file:
@@ -55,4 +55,4 @@
     dest: '{{ nginx_conf_dir }}/sites-enabled/{{ item }}.conf'
   with_items: '{{ nginx_sites.keys() | difference(nginx_remove_sites) }}'
   notify:
-   - Reload nginx
+    - Reload nginx

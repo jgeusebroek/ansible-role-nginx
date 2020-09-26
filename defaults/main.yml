@@ -29,7 +29,7 @@ nginx_events_params:
 nginx_access_log: "{{nginx_log_dir}}/access.log"
 nginx_error_log: "{{nginx_log_dir}}/error.log warn"
 
-nginx_daemon_mode: on
+nginx_daemon_mode: "on"
 
 nginx_worker_processes: "{{ ansible_processor_vcpus }}"
 nginx_worker_rlimit_nofile: 1024
@@ -53,7 +53,7 @@ nginx_ssl_resolver_timeout: "5s"
 # HSTS (HTTP Strict Transport Security) enabled by default
 # (https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security)
 # to avoid ssl stripping https://en.wikipedia.org/wiki/Moxie_Marlinspike#SSL_stripping
-nginx_ssl_hsts: True
+nginx_ssl_hsts: true
 nginx_ssl_hsts_age: 31536000
 
 # List of IP addresses or CIDR ranges to allow access to the status page

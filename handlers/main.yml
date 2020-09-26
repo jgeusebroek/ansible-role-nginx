@@ -1,14 +1,14 @@
 ---
 - name: Restart nginx
   debug: msg="checking config first"
-  changed_when: True
+  changed_when: true
   notify:
     - Check nginx configuration
     - Restart nginx - after config check
 
 - name: Reload nginx
   debug: msg="checking config first"
-  changed_when: True
+  changed_when: true
   notify:
     - Check nginx configuration
     - Reload nginx - after config check
@@ -17,7 +17,7 @@
   shell: "{{ nginx_binary_name }} -t"
   register: result
   changed_when: "result.rc != 0"
-  check_mode: no
+  check_mode: false
   tags: skip_ansible_lint
 
 - name: Restart nginx - after config check

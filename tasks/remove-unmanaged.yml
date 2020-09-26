@@ -2,7 +2,7 @@
 - name: Find current enabled sites
   shell: ls -1 {{ nginx_conf_dir }}/sites-enabled
   register: enabled_sites
-  changed_when: False
+  changed_when: false
   tags: skip_ansible_lint
 
 - name: Remove unmanaged enabled sites
@@ -12,12 +12,12 @@
   with_items: '{{ enabled_sites.stdout_lines }}'
   when: item[:-5] not in nginx_sites.keys()
   notify:
-   - Reload nginx
+    - Reload nginx
 
 - name: Find config.d files
   shell: ls -1 {{ nginx_conf_dir }}/conf.d
   register: config_files
-  changed_when: False
+  changed_when: false
   tags: skip_ansible_lint
 
 - name: Remove unmanaged config.d files
@@ -27,12 +27,12 @@
   with_items: '{{ config_files.stdout_lines }}'
   when: item[:-5] not in nginx_configs.keys()
   notify:
-   - Reload nginx
+    - Reload nginx
 
 - name: Find snippets
   shell: ls -1 {{ nginx_conf_dir }}/snippets
   register: snippets
-  changed_when: False
+  changed_when: false
   tags: skip_ansible_lint
 
 - name: Remove unmanaged snippets
@@ -42,4 +42,4 @@
   with_items: '{{ snippets.stdout_lines }}'
   when: item[:-5] not in nginx_snippets.keys()
   notify:
-   - Reload nginx
+    - Reload nginx

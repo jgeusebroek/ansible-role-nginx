@@ -9,5 +9,5 @@
       package:
         name: gnupg
         state: present
-      changed_when: False
+      changed_when: false
       when: ansible_os_family == 'Debian'
