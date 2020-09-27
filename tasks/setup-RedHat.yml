@@ -8,6 +8,7 @@
   template:
     src: '{{ ansible_os_family }}/nginx.repo.j2'
     dest: '/etc/yum.repos.d/nginx.repo'
+    mode: '0644'
   when: ansible_os_family == 'RedHat' and nginx_use_official_repo
 
 - name: Install the nginx packages | RedHat

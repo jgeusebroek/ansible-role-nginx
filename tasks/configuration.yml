@@ -5,6 +5,7 @@
     dest: '{{ nginx_conf_dir }}/nginx.conf'
     owner: '{{ nginx_config_user }}'
     group: '{{ nginx_config_group }}'
+    mode: '0644'
   notify:
     - Restart nginx
 
@@ -34,6 +35,7 @@
     dest: '{{ nginx_conf_dir }}/conf.d/{{ item.key }}.conf'
     owner: '{{ nginx_config_user }}'
     group: '{{ nginx_config_group }}'
+    mode: '0644'
   with_dict: '{{ nginx_configs }}'
   notify:
     - Reload nginx
@@ -44,6 +46,7 @@
     dest: '{{ nginx_conf_dir }}/sites-available/{{ item }}.conf'
     owner: '{{ nginx_config_user }}'
     group: '{{ nginx_config_group }}'
+    mode: '0644'
   with_items: '{{ nginx_sites.keys() | difference(nginx_remove_sites) }}'
   notify:
     - Reload nginx
