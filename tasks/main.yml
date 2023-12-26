@@ -2,16 +2,16 @@
 - name: Include OS-specific variables
   include_vars: "{{ ansible_os_family }}.yml"
 
-- include: setup-Debian.yml
+- include_tasks: setup-Debian.yml
   when: ansible_os_family == 'Debian'
 
-- include: setup-RedHat.yml
+- include_tasks: setup-RedHat.yml
   when: ansible_os_family == 'RedHat'
 
-- include: remove-defaults.yml
+- include_tasks: remove-defaults.yml
 
-- include: create-directories.yml
+- include_tasks: create-directories.yml
 
-- include: remove-unmanaged.yml
+- include_tasks: remove-unmanaged.yml
 
-- include: configuration.yml
+- include_tasks: configuration.yml
